@@ -84,14 +84,29 @@ public_users.get("/author/:author", function (req, res) {
 
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
-  const title = req.params.title;
-  let filtered_books = [];
-  for (let key in books) {
-    if (books[key].title === title) {
-      filtered_books.push(books[key]);
+ const title = req.params.title;
+  
+  const getBooksByTitle = new Promise((resolve, reject) => {
+    let filtered_books = [];
+    for (let key in books) {
+      if (books[key].title === title) {
+        filtered_books.push(books[key]);
+      }
     }
-  }
-  res.send(filtered_books);
+    if (filtered_books.length > 0) {
+      resolve(filtered_books);
+    } else {
+      reject("No books found with this title");
+    }
+  });
+
+  getBooksByTitle
+    .then((bookList) => {
+      res.send(bookList);
+    })
+    .catch((error) => {
+      res.status(404).json({ message: error });
+    });
 });
 
 //  Get book review
