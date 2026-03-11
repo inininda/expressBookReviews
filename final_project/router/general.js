@@ -33,6 +33,16 @@ public_users.get("/", function (req, res) {
   });
 });
 
+// Get the book list using async-await with Axios
+public_users.get("/books-async", async function (req, res) {
+  try {
+    const response = await axios.get("http://localhost:5000/");
+    res.send(JSON.stringify(response.data, null, 4));
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching books", error: error.message });
+  }
+});
+
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
    const isbn = req.params.isbn;
@@ -53,6 +63,17 @@ public_users.get("/isbn/:isbn", function (req, res) {
     .catch((error) => {
       res.status(404).json({ message: error });
     });
+});
+
+// Get book details based on ISBN using async-await with Axios
+public_users.get("/isbn-async/:isbn", async function (req, res) {
+  const isbn = req.params.isbn;
+  try {
+    const response = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+    res.send(response.data);
+  } catch (error) {
+    res.status(404).json({ message: "Book not found", error: error.message });
+  }
 });
 
 // Get book details based on author
@@ -82,6 +103,17 @@ public_users.get("/author/:author", function (req, res) {
     });
 });
 
+// Get book details based on author using async-await with Axios
+public_users.get("/author-async/:author", async function (req, res) {
+  const author = req.params.author;
+  try {
+    const response = await axios.get(`http://localhost:5000/author/${author}`);
+    res.send(response.data);
+  } catch (error) {
+    res.status(404).json({ message: "No books found by this author", error: error.message });
+  }
+});
+
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
  const title = req.params.title;
@@ -107,6 +139,17 @@ public_users.get("/title/:title", function (req, res) {
     .catch((error) => {
       res.status(404).json({ message: error });
     });
+});
+
+// Get all books based on title using async-await with Axios
+public_users.get("/title-async/:title", async function (req, res) {
+  const title = req.params.title;
+  try {
+    const response = await axios.get(`http://localhost:5000/title/${title}`);
+    res.send(response.data);
+  } catch (error) {
+    res.status(404).json({ message: "No books found with this title", error: error.message });
+  }
 });
 
 //  Get book review
